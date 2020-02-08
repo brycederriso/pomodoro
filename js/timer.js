@@ -62,6 +62,7 @@ const handleResetMessage = (baseTime) => {
 }
 
 // todo: build some better understood messages?
+// not clear if this page is complicated enough to justify more than three constants...
 const START = "START";
 const PAUSE = "PAUSE";
 const RESET = "RESET";
