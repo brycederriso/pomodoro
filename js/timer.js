@@ -38,54 +38,54 @@ const removeInterval = () => {
 }
 
 const sendUpdate = () => {
-  let millisecondsRemaining = getTime();
+  let millisecondsRemaining = getTime()
   if (millisecondsRemaining < 0) {
     // removing this interval means we stop tracking time at all.
     // this is the place where we'd want to *keep going* so we could display how much time has elapsed since the end of
     // the pomodoro. Something like `-10:30` if you went to the bathroom or whatever before clicking stop. Might be nice.
     removeInterval()
   }
-  postMessage(millisecondsRemaining);
+  postMessage(millisecondsRemaining)
 }
 
 const handleStartMessage = (baseTime) => {
   if (!timerInterval) {
-    startTimer(baseTime);
-    timerInterval = setInterval(sendUpdate, 300);
+    startTimer(baseTime)
+    timerInterval = setInterval(sendUpdate, 300)
   }
 }
 const handlePauseMessage = () => {
-  pauseTimer();
-  removeInterval();
-  postMessage(getTime());
+  pauseTimer()
+  removeInterval()
+  postMessage(getTime())
 }
 const handleResetMessage = (baseTime) => {
   // todo: should reset kill your current timer session?
-  resetTimer(baseTime);
-  removeInterval();
-  postMessage(getTime());
+  resetTimer(baseTime)
+  removeInterval()
+  postMessage(getTime())
 }
 
 // todo: build some better understood messages?
 // not clear if this page is complicated enough to justify more than three constants...
-const START = "START";
-const PAUSE = "PAUSE";
-const RESET = "RESET";
+const START = "START"
+const PAUSE = "PAUSE"
+const RESET = "RESET"
 
 onmessage = (event) => {
   // todo: it looks like postMessage takes any JS object. So probably shouldn't use an array.
   switch (event.data[0]) {
     case START:
-      handleStartMessage(event.data[1]);
-      break;
+      handleStartMessage(event.data[1])
+      break
     case PAUSE:
-      handlePauseMessage();
-      break;
+      handlePauseMessage()
+      break
     case RESET:
-      handleResetMessage(event.data[1]);
-      break;
+      handleResetMessage(event.data[1])
+      break
     default:
-      //todo: handle error case
+    //todo: handle error case
   }
 }
 
