@@ -1,20 +1,22 @@
+// todo: send a notification when time is up
+// todo: change the title of the page when time is up.
 let pomodoroMinutes = 1
 let pomodoroMilliseconds = pomodoroMinutes * 60 * 1000
-
+const ORIGINAL_DOCUMENT_TITLE = document.title;
 const timerDiv = document.getElementById('timer')
 const setTimerDisplay = (milliseconds) => {
-  const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60))
-  const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000)
+  const minutes = String(Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+  const seconds = String(Math.floor((milliseconds % (1000 * 60)) / 1000)).padStart(2, '0');
 
-  // todo: fix the display so that there are leading 0's on my timer.
   timerDiv.innerHTML = `${minutes}:${seconds}`
 }
-const updateDisplay = (distance) => {
-  setTimerDisplay(distance)
+const updateDisplay = (millisecondsRemaining) => {
+  setTimerDisplay(millisecondsRemaining)
 
-  if (distance < 0) {
-    removeInterval()
-    timerDiv.innerHTML = 'EXPIRED'
+  if (millisecondsRemaining < 0) {
+    // time's up
+    timerDiv.innerHTML = 'EXPIRED';
+    document.title = `Time's up!`;
   }
 }
 
@@ -28,10 +30,12 @@ if (window.Worker) {
     timerWorker.postMessage(['START', pomodoroMilliseconds])
   }
   const handlePauseClick = (event) => {
+    // clicking pause immediately after page refresh has ill-defined behavior.
     timerWorker.postMessage(['PAUSE']);
   }
   const handleResetClick = (event) => {
     timerWorker.postMessage(['RESET', pomodoroMilliseconds]);
+    document.title = ORIGINAL_DOCUMENT_TITLE;
   }
 
   document.getElementById('start-button').addEventListener('click', handleStartClick)
