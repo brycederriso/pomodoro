@@ -52,6 +52,7 @@ The key here is what "acknowledging" will look like.
 * https://developer.mozilla.org/en-US/docs/Web/API/Notification/requestPermission
 * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
 * https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
+* https://webpack.js.org/guides/getting-started/
 
 ## Favorite typo
 Lol: "Pomorodos" -- semantic satiation has been achieved. 🚀
