@@ -20,6 +20,52 @@ const updateDisplay = (millisecondsRemaining) => {
   }
 }
 
+switch (Notification.permission) {
+  case "default": // user hasn't been asked
+    // FIXME: requestPermission(cb) is deprecated.
+    Notification.requestPermission(function(status) {
+      console.log('Notification permission status:', status);
+    });
+    break;
+  case "granted": // user has been asked and allowed it.
+    break
+  case "denied": // user doesn't want it.
+    break;
+  default: // do nothing if Notification.permission isn't a thing.
+}
+function askNotificationPermission() {
+  // function to actually ask the permissions
+  function handlePermission(permission) {
+    // Whatever the user answers, we make sure Chrome stores the information
+    if(!('permission' in Notification)) {
+      Notification.permission = permission;
+    }
+
+    // set the button to shown or hidden, depending on what the user answers
+    if(Notification.permission === 'denied' || Notification.permission === 'default') {
+      notificationBtn.style.display = 'block';
+    } else {
+      notificationBtn.style.display = 'none';
+    }
+  }
+
+  // Let's check if the browser supports notifications
+  if (!('Notification' in window)) {
+    console.log("This browser does not support notifications.");
+  } else {
+    if(checkNotificationPromise()) {
+      Notification.requestPermission()
+        .then((permission) => {
+          handlePermission(permission);
+        })
+    } else {
+      Notification.requestPermission(function(permission) {
+        handlePermission(permission);
+      });
+    }
+  }
+}
+
 if (window.Worker) {
   const timerWorker = new Worker('js/timer.js');
   timerWorker.onmessage = (event) => {

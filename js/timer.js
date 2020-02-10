@@ -1,3 +1,5 @@
+// it's not clear that a WebWorker is warranted here. But the pomodoro timer I'm cloning uses them and it doesn't seem
+// to complicate the design that much.
 // todo: Make a Timer class
 let countdownDate
 let remainingTime = 0
@@ -36,11 +38,14 @@ const removeInterval = () => {
 }
 
 const sendUpdate = () => {
-  let distance = getTime();
-  if (distance < 0) {
+  let millisecondsRemaining = getTime();
+  if (millisecondsRemaining < 0) {
+    // removing this interval means we stop tracking time at all.
+    // this is the place where we'd want to *keep going* so we could display how much time has elapsed since the end of
+    // the pomodoro. Something like `-10:30` if you went to the bathroom or whatever before clicking stop. Might be nice.
     removeInterval()
   }
-  postMessage(distance);
+  postMessage(millisecondsRemaining);
 }
 
 const handleStartMessage = (baseTime) => {
