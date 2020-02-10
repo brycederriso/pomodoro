@@ -13,7 +13,7 @@ There's also the idea of *rewarding* yourself when completing tasks.
 The buzzer to let you know that a task is done is separate from the actual completion of it.
 The task is complete when you write your check mark down.
 We know from video games that we can provide feedback + dopamine to someone with sound, lights, whatever.
-So, I think it would be nice to provide something a little nicer than "BUZZZZZZZZZ" and a (metaphorical) slap on the ass.
+So, I think it would be nice to provide something a little nicer than "BUZZZZZZZZZ".
 
 Part of that would be to separate the completion of the *timer* from the completion of the *task*.
 This opens us up further to [overlearning](https://en.wikipedia.org/wiki/Overlearning) as well.
@@ -38,6 +38,7 @@ The key here is what "acknowledging" will look like.
 * todo: Webstorm is not playing well as a webserver and I need to see about running babel or something anyway -- Setup webpack.
 * todo: Put things in a Docker container for local work because *everyone* will want to pull this down and use it locally.
 * todo: Track down the documentation you've been reading and Ankify it so you don't forget everything in a week.
+* todo: Find out if Do not disturb can be detected or turned on from a browser. Would be nice to use my phone to detect that I'm working when it's face down.
 
 ## Ankify
 * https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications

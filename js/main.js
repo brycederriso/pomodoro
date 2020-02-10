@@ -79,4 +79,3 @@ if (window.Worker) {
   // A friendly fallback strategy would be nice.
   document.getElementById('timer-layout').innerHTML = 'Web Workers are required.'
 }
-
