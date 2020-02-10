@@ -35,6 +35,8 @@ The key here is what "acknowledging" will look like.
 * todo: How can I associate a task with a pomodoro? Would that even be nice?
 * todo: Figure out a good sound to associate with task completion.
 * todo: It would be really cool to associate the pomodoro timer with Spotify to play some music while things are happening.
+* todo: Webstorm is not playing well as a webserver and I need to see about running babel or something anyway -- Setup webpack.
+* todo: Put things in a Docker container for local work because *everyone* will want to pull this down and use it locally.
 
 ## Favorite typo
 Lol: "Pomorodos" -- semantic satiation has been achieved. 🚀
