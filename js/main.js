@@ -1,6 +1,8 @@
 // todo: send a notification when time is up
 // todo: change the title of the page when time is up.
-let pomodoroMinutes = 1
+import {askNotificationPermission, sendNotification} from '/pomodoro/js/notifications.js'
+
+let pomodoroMinutes = .25
 let pomodoroMilliseconds = pomodoroMinutes * 60 * 1000
 const ORIGINAL_DOCUMENT_TITLE = document.title
 const timerDiv = document.getElementById('timer')
@@ -10,62 +12,17 @@ const setTimerDisplay = (milliseconds) => {
 
   timerDiv.innerHTML = `${minutes}:${seconds}`
 }
+
 const updateDisplay = (millisecondsRemaining) => {
   setTimerDisplay(millisecondsRemaining)
-
   if (millisecondsRemaining < 0) {
     // time's up
     timerDiv.innerHTML = 'EXPIRED'
     document.title = `Time's up!`
+    sendNotification(`Time's up!`);
   }
 }
 
-switch (Notification.permission) {
-  case "default": // user hasn't been asked
-    // FIXME: requestPermission(cb) is deprecated.
-    Notification.requestPermission(function (status) {
-      console.log('Notification permission status:', status)
-    })
-    break
-  case "granted": // user has been asked and allowed it.
-    break
-  case "denied": // user doesn't want it.
-    break
-  default: // do nothing if Notification.permission isn't a thing.
-}
-
-function askNotificationPermission () {
-  // function to actually ask the permissions
-  function handlePermission (permission) {
-    // Whatever the user answers, we make sure Chrome stores the information
-    if (!('permission' in Notification)) {
-      Notification.permission = permission
-    }
-
-    // set the button to shown or hidden, depending on what the user answers
-    if (Notification.permission === 'denied' || Notification.permission === 'default') {
-      notificationBtn.style.display = 'block'
-    } else {
-      notificationBtn.style.display = 'none'
-    }
-  }
-
-  // Let's check if the browser supports notifications
-  if (!('Notification' in window)) {
-    console.log("This browser does not support notifications.")
-  } else {
-    if (checkNotificationPromise()) {
-      Notification.requestPermission()
-        .then((permission) => {
-          handlePermission(permission)
-        })
-    } else {
-      Notification.requestPermission(function (permission) {
-        handlePermission(permission)
-      })
-    }
-  }
-}
 
 if (window.Worker) {
   const timerWorker = new Worker('js/timer.js')
@@ -75,6 +32,11 @@ if (window.Worker) {
 
   const handleStartClick = (event) => {
     timerWorker.postMessage(['START', pomodoroMilliseconds])
+
+    if (Notification.permission === 'default') {
+      askNotificationPermission()
+    }
+
   }
   const handlePauseClick = (event) => {
     // clicking pause immediately after page refresh has ill-defined behavior.
