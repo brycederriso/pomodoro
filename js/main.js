@@ -23,6 +23,12 @@ const updateDisplay = (millisecondsRemaining) => {
   }
 }
 
+/*
+* A TaskTimer can be started, paused, and reset.
+* When it's completed it records that it's "complete" somewhere.
+* It has an associated description, start time, end time...?
+* */
+
 const setupTimerControls = () => {
   const timerWorker = new Worker('js/timer.js')
   timerWorker.onmessage = (event) => {
@@ -30,17 +36,17 @@ const setupTimerControls = () => {
   }
 
   const handlePomodoroClick = (e) => {
-    timerWorker.postMessage(['RESET', pomodoroMilliseconds]);
+    timerWorker.postMessage(['RESET', pomodoroMilliseconds])
   }
   document.getElementById('pomodoro-button').addEventListener('click', handlePomodoroClick)
 
   const handleShortBreakClick = (e) => {
-    timerWorker.postMessage(['RESET', 5 * 60 * 1000]);
+    timerWorker.postMessage(['RESET', 5 * 60 * 1000])
   }
   document.getElementById('short-break-button').addEventListener('click', handleShortBreakClick)
 
   const handleLongBreakClick = (e) => {
-    timerWorker.postMessage(['RESET', 30 * 60 * 1000]);
+    timerWorker.postMessage(['RESET', 30 * 60 * 1000])
   }
   document.getElementById('long-break-button').addEventListener('click', handleLongBreakClick)
 
@@ -67,7 +73,7 @@ const setupTimerControls = () => {
 }
 
 if (window.Worker) {
-  setupTimerControls();
+  setupTimerControls()
 } else {
   // todo: Web workers aren't really required, it just makes things less goofy.
   // A friendly fallback strategy would be nice.
