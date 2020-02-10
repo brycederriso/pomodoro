@@ -37,6 +37,20 @@ The key here is what "acknowledging" will look like.
 * todo: It would be really cool to associate the pomodoro timer with Spotify to play some music while things are happening.
 * todo: Webstorm is not playing well as a webserver and I need to see about running babel or something anyway -- Setup webpack.
 * todo: Put things in a Docker container for local work because *everyone* will want to pull this down and use it locally.
+* todo: Track down the documentation you've been reading and Ankify it so you don't forget everything in a week.
+
+## Ankify
+* https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications
+* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules
+* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
+* https://developers.google.com/web/fundamentals/push-notifications
+* https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API
+* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise
+* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+* https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox
+* https://developer.mozilla.org/en-US/docs/Web/API/Notification/requestPermission
+* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
+* https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
 
 ## Favorite typo
 Lol: "Pomorodos" -- semantic satiation has been achieved. 🚀
