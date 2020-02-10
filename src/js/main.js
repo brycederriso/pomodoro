@@ -1,6 +1,6 @@
 // todo: send a notification when time is up
 // todo: change the title of the page when time is up.
-import { askNotificationPermission, sendNotification } from './js/notifications.js'
+import { askNotificationPermission, sendNotification } from './notifications.js'
 
 let pomodoroMinutes = 25
 let pomodoroMilliseconds = pomodoroMinutes * 60 * 1000
