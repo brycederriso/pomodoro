@@ -1,6 +1,6 @@
 // todo: send a notification when time is up
 // todo: change the title of the page when time is up.
-import {askNotificationPermission, sendNotification} from '/pomodoro/js/notifications.js'
+import { askNotificationPermission, sendNotification } from '/pomodoro/js/notifications.js'
 
 let pomodoroMinutes = .25
 let pomodoroMilliseconds = pomodoroMinutes * 60 * 1000
@@ -19,10 +19,9 @@ const updateDisplay = (millisecondsRemaining) => {
     // time's up
     timerDiv.innerHTML = 'EXPIRED'
     document.title = `Time's up!`
-    sendNotification(`Time's up!`);
+    sendNotification(`Time's up!`)
   }
 }
-
 
 if (window.Worker) {
   const timerWorker = new Worker('js/timer.js')

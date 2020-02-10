@@ -23,12 +23,13 @@ function askNotificationPermission () {
   } else {
     return new Promise((resolve) => {
       Notification.requestPermission(permission => {
-        handlePermission(permission);
-        resolve(permission);
+        handlePermission(permission)
+        resolve(permission)
       })
     })
   }
 }
+
 function sendNotification (text) {
   if (!("Notification" in window)) {
     console.log('This browser does not support notifications.')
@@ -39,7 +40,7 @@ function sendNotification (text) {
       if (permission === 'granted') {
         const notification = new Notification(text)
       }
-    });
+    })
   }
 }
 
