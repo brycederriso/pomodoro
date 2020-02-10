@@ -1,0 +1,27 @@
+{
+  "name": "pomodoro",
+  "version": "1.0.0",
+  "description": "Go read the [Wikipedia article](https://en.wikipedia.org/wiki/Pomodoro_Technique) for an overview of what the technique is.\r Highlights are:\r * Traditionally 25 minute \"Pomodoros\"\r * 3-5 minute short breaks\r * 15-30 minute long breaks\r * Take a long break every 4 Pomodoros.",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brycederriso/pomodoro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brycederriso/pomodoro/issues"
+  },
+  "homepage": "https://github.com/brycederriso/pomodoro#readme",
+  "devDependencies": {
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  }
+}
