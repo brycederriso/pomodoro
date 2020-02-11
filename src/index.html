@@ -3,7 +3,7 @@
 
 <head>
   <!--todo: uncomment the manifest, webstorm is really unhappy serving it though.-->
-  <!--  <link rel="manifest" href="site.webmanifest">-->
+  <link rel="manifest" href="site.webmanifest">
   <link rel="apple-touch-icon" href="icon.png">
   <!-- Place favicon.ico in the root directory -->
 
@@ -20,6 +20,14 @@
 
 <body>
 <main id="timer-layout">
+  <div id="settings">
+    <label for="pomodoro-time">Pomodoro Time</label>
+    <input type="number" id="pomodoro-time" name="pomodoro-time">
+    <label for="short-break-time">Short Break Time</label>
+    <input type="number" id="short-break-time" name="short-break-time">
+    <label for="long-break-time">Long Break Time</label>
+    <input type="number" id="long-break-time" name="long-break-time"">
+  </div>
   <div id="pomodoro-controls">
     <button id="pomodoro-button">Pomodoro</button>
     <button id="short-break-button">Short Break</button>
@@ -32,6 +40,7 @@
     <button id="reset-button">Reset</button>
   </div>
 </main>
+<script src="js/vendor/modernizr-3.8.0.min.js"></script>
 <script type="module" src="js/main.js"></script>
 </body>
 

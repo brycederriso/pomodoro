@@ -27,7 +27,8 @@ With that the workflow will look something like:
 
 The key here is what "acknowledging" will look like.
 
-* todo: [Set up HTML webpack plugin](https://webpack.js.org/guides/output-management/#preparation)
+* todo: Add pattern validation to inputs for times
+* todo: Add placeholder values on inputs for times
 * todo: What does "acknowledging" task completion look like?
 * todo: Create a record of completed Pomodoros.
 * todo: Share push notifications between desktop and phone.
@@ -40,6 +41,7 @@ The key here is what "acknowledging" will look like.
 * todo: Put things in a Docker container for local work because *everyone* will want to pull this down and use it locally.
 * todo: Track down the documentation you've been reading and Ankify it so you don't forget everything in a week.
 * todo: Find out if Do not disturb can be detected or turned on from a browser. Would be nice to use my phone to detect that I'm working when it's face down.
+* todo: Unpack pomodoro icons
 
 ## Ankify
 * https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications
@@ -61,7 +63,7 @@ Lol: "Pomorodos" -- semantic satiation has been achieved. 🚀
 ## Docker configurations
 To mount the source directory:
 ```sh
-$ docker run -dit --name dev-server -p 8080:80 --mount src="$(pwd)/src",dst="/usr/local/apache2/htdocs/" httpd:2.4-alpine
+$ docker run -dit --name dev-server -p 8080:80 --mount type=bind,src="$(pwd)/src",dst="/usr/local/apache2/htdocs/" httpd:2.4-alpine
 ```
 
 Build the container with docker build.

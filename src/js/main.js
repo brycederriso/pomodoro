@@ -6,6 +6,12 @@ let pomodoroMinutes = 25
 let pomodoroMilliseconds = pomodoroMinutes * 60 * 1000
 const ORIGINAL_DOCUMENT_TITLE = document.title
 const timerDiv = document.getElementById('timer')
+
+function setupSettingsControls () {
+  // todo: hook into the input box controls to update my times when they update.
+
+}
+
 const setTimerDisplay = (milliseconds) => {
   const minutes = String(Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60))).padStart(1, '0')
   const seconds = String(Math.floor((milliseconds % (1000 * 60)) / 1000)).padStart(2, '0')
@@ -22,12 +28,6 @@ const updateDisplay = (millisecondsRemaining) => {
     sendNotification(`Time's up!`)
   }
 }
-
-/*
-* A TaskTimer can be started, paused, and reset.
-* When it's completed it records that it's "complete" somewhere.
-* It has an associated description, start time, end time...?
-* */
 
 const setupTimerControls = () => {
   const timerWorker = new Worker('js/timer.js')
