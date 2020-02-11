@@ -56,6 +56,7 @@ The key here is what "acknowledging" will look like.
 * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
 * https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
 * `https://hub.docker.com/_/httpd`
+* https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input
 
 ## Favorite typo
 Lol: "Pomorodos" -- semantic satiation has been achieved. 🚀
