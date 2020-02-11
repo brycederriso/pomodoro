@@ -27,6 +27,7 @@ With that the workflow will look something like:
 
 The key here is what "acknowledging" will look like.
 
+* todo: [Set up HTML webpack plugin](https://webpack.js.org/guides/output-management/#preparation)
 * todo: What does "acknowledging" task completion look like?
 * todo: Create a record of completed Pomodoros.
 * todo: Share push notifications between desktop and phone.
