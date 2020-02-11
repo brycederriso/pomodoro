@@ -53,7 +53,18 @@ The key here is what "acknowledging" will look like.
 * https://developer.mozilla.org/en-US/docs/Web/API/Notification/requestPermission
 * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
 * https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
-* https://webpack.js.org/guides/getting-started/
+* `https://hub.docker.com/_/httpd`
 
 ## Favorite typo
 Lol: "Pomorodos" -- semantic satiation has been achieved. 🚀
+
+## Docker configurations
+To mount the source directory:
+```sh
+$ docker run -dit --name dev-server -p 8080:80 --mount src="$(pwd)/src",dst="/usr/local/apache2/htdocs/" httpd:2.4-alpine
+```
+
+Build the container with docker build.
+```sh
+$ docker build -t pomodoro .
+```
