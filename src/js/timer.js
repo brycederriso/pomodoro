@@ -37,3 +37,10 @@ const resetTimer = (baseTime) => {
   queuedTime = baseTime
   removeInterval()
 }
+
+const timer = {
+  startTimer,
+  getTime,
+  pauseTimer,
+  resetTimer
+}
