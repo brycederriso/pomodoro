@@ -6,7 +6,7 @@ let pomodoroMinutes = 25
 let shortBreakMinutes = 5
 let longBreakMinutes = 30
 
-let activeTimer;
+let activeTimer = 'POMODORO';
 
 function toMillis (minutes) {
   return minutes * 60 * 1000
@@ -38,7 +38,7 @@ function setupSettingsControls (timerWorker) {
   })
 
   // init
-  timerWorker.postMessage(['SET', 'POMODORO', pomodoroMilliseconds])
+  timerWorker.postMessage(['SET', 'POMODORO', toMillis(pomodoroMinutes)])
   timerWorker.postMessage(['SET', 'SHORT_BREAK', toMillis(shortBreakMinutes)])
   timerWorker.postMessage(['SET', 'LONG_BREAK', toMillis(longBreakMinutes)])
 }
@@ -66,18 +66,23 @@ const setupTimerControls = (timerWorker) => {
   }
 
   const handlePomodoroClick = (e) => {
+    // todo: there's a great opportunity to make these click handlers more generic.
+    // todo: figure out what to do about SET not behaving as expected. Would like new SETs to send updates to the unstarted UI if that timer is active.
+    timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
     activeTimer = 'POMODORO'
     timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
   }
   document.getElementById('pomodoro-button').addEventListener('click', handlePomodoroClick)
 
   const handleShortBreakClick = (e) => {
+    timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
     activeTimer = 'SHORT_BREAK'
     timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
   }
   document.getElementById('short-break-button').addEventListener('click', handleShortBreakClick)
 
   const handleLongBreakClick = (e) => {
+    timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
     activeTimer = 'LONG_BREAK'
     timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
   }
