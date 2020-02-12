@@ -26,7 +26,11 @@ const Timer = function (t) {
       } else {
         countdownDate = Date.now() + baseTime
       }
-      timerInterval = setInterval(cb, 300)
+      // todo: This is incredibly gross.
+      //  I have to do it because sendUpdate (the cb) was relying on lexically scoped timer to get and pause.
+      //  That doesn't work when we deal with multiple timer objects.
+      //  I do feel like at some point I'd like to provide custom "stop" conditions for a timer
+      timerInterval = setInterval(cb.bind(undefined, getTime, pauseTimer), 300)
     }
   }
   const getTime = () => {
