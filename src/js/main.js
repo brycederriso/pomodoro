@@ -3,12 +3,34 @@
 import { askNotificationPermission, sendNotification } from './notifications.js'
 
 let pomodoroMinutes = 25
-let pomodoroMilliseconds = pomodoroMinutes * 60 * 1000
+let shortBreakMinutes = 5
+let longBreakMinutes = 30
+
+function toMillis (minutes) {
+  return minutes * 60 * 1000
+}
+
+let pomodoroMilliseconds = toMillis(pomodoroMinutes);
 const ORIGINAL_DOCUMENT_TITLE = document.title
 const timerDiv = document.getElementById('timer')
 
-function setupSettingsControls () {
-  // todo: hook into the input box controls to update my times when they update.
+function setupSettingsControls (timerWorker) {
+  const pomodoroMinutesInput = document.getElementById('pomodoro-time')
+  pomodoroMinutesInput.value = pomodoroMinutes
+  pomodoroMinutesInput.addEventListener('input', function () {
+    pomodoroMinutes = pomodoroMinutesInput.value;
+    timerWorker.postMessage(['RESET', toMillis(pomodoroMinutes)])
+  })
+
+  // todo: Passing a Dumb reset message causes the timer to reset even if it's running.
+  const shortBreakMinutesInput = document.getElementById('short-break-time')
+  shortBreakMinutesInput.value = shortBreakMinutes
+  shortBreakMinutesInput.addEventListener('input', function () {
+    shortBreakMinutes = shortBreakMinutesInput.value;
+    timerWorker.postMessage(['RESET', toMillis(shortBreakMinutes)])
+  })
+
+  document.getElementById('long-break-time').value = longBreakMinutes
 
 }
 
@@ -29,8 +51,7 @@ const updateDisplay = (millisecondsRemaining) => {
   }
 }
 
-const setupTimerControls = () => {
-  const timerWorker = new Worker('js/timer.js')
+const setupTimerControls = (timerWorker) => {
   timerWorker.onmessage = (event) => {
     updateDisplay(event.data)
   }
@@ -73,7 +94,9 @@ const setupTimerControls = () => {
 }
 
 if (window.Worker) {
-  setupTimerControls()
+  const timerWorker = new Worker('js/timer.js')
+  setupTimerControls(timerWorker)
+  setupSettingsControls(timerWorker)
 } else {
   // todo: Web workers aren't really required, it just makes things less goofy.
   // A friendly fallback strategy would be nice.
