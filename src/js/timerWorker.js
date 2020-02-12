@@ -1,9 +1,9 @@
 // it's not clear that a WebWorker is warranted here. But the pomodoro timer I'm cloning uses them and it doesn't seem
 // to complicate the design that much.
 importScripts('./timer.js')
-
+const timer = Timer(25);
 const sendUpdate = () => {
-  let millisecondsRemaining = getTime()
+  let millisecondsRemaining = timer.getTime()
   if (millisecondsRemaining < 0) {
     // removing this interval means we stop tracking time at all.
     // this is the place where we'd want to *keep going* so we could display how much time has elapsed since the end of
@@ -14,7 +14,8 @@ const sendUpdate = () => {
 }
 
 const handleStartMessage = (baseTime) => {
-  timer.startTimer(baseTime, sendUpdate)
+  timer.setBaseTime(baseTime);
+  timer.startTimer(sendUpdate)
 }
 const handlePauseMessage = () => {
   timer.pauseTimer()
@@ -22,7 +23,8 @@ const handlePauseMessage = () => {
 }
 const handleResetMessage = (baseTime) => {
   // todo: should reset kill your current timer session?
-  timer.resetTimer(baseTime)
+  timer.setBaseTime(baseTime)
+  timer.resetTimer()
   postMessage(timer.getTime())
 }
 
