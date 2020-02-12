@@ -94,7 +94,7 @@ const setupTimerControls = (timerWorker) => {
 }
 
 if (window.Worker) {
-  const timerWorker = new Worker('js/timer.js')
+  const timerWorker = new Worker('js/timerWorker.js')
   setupTimerControls(timerWorker)
   setupSettingsControls(timerWorker)
 } else {

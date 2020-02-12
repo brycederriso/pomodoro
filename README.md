@@ -42,6 +42,8 @@ The key here is what "acknowledging" will look like.
 * todo: Track down the documentation you've been reading and Ankify it so you don't forget everything in a week.
 * todo: Find out if Do not disturb can be detected or turned on from a browser. Would be nice to use my phone to detect that I'm working when it's face down.
 * todo: Unpack pomodoro icons
+* todo: Figure out how to play a sound
+* todo: Get .htaccess file over to the httpd.conf path in the Docker container. See the .htaccess file for more
 
 ## Ankify
 * https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications
