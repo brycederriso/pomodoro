@@ -2,9 +2,6 @@
 // todo: change the title of the page when time is up.
 import { askNotificationPermission, sendNotification } from './notifications.js'
 
-let pomodoroMinutes = 25
-let shortBreakMinutes = 5
-let longBreakMinutes = 30
 
 let activeTimer = 'POMODORO';
 
@@ -15,32 +12,26 @@ function toMillis (minutes) {
 const ORIGINAL_DOCUMENT_TITLE = document.title
 const timerDiv = document.getElementById('timer')
 
+function setupMinutesInput (timerWorker, elementId, timerName, initialValue) {
+  const minutesInput = document.getElementById(elementId)
+  minutesInput.value = initialValue
+  minutesInput.addEventListener('input', function () {
+    timerWorker.postMessage(['SET', timerName, toMillis(minutesInput.value)])
+    timerWorker.postMessage(['RESET', timerName])
+  })
+
+  // initialize inputs with starting value
+  timerWorker.postMessage(['SET', timerName, toMillis(initialValue)])
+}
+
 function setupSettingsControls (timerWorker) {
-  const pomodoroMinutesInput = document.getElementById('pomodoro-time')
-  pomodoroMinutesInput.value = pomodoroMinutes
-  pomodoroMinutesInput.addEventListener('input', function () {
-    pomodoroMinutes = pomodoroMinutesInput.value;
-    timerWorker.postMessage(['SET', 'POMODORO', toMillis(pomodoroMinutes)])
-  })
+  const startingPomodoroMinutes = 25
+  const startingShortBreakMinutes = 5
+  const startingLongBreakMinutes = 30
 
-  const shortBreakMinutesInput = document.getElementById('short-break-time')
-  shortBreakMinutesInput.value = shortBreakMinutes
-  shortBreakMinutesInput.addEventListener('input', function () {
-    shortBreakMinutes = shortBreakMinutesInput.value;
-    timerWorker.postMessage(['SET', 'SHORT_BREAK', toMillis(shortBreakMinutes)])
-  })
-
-  const longBreakMinutesInput = document.getElementById('long-break-time')
-  longBreakMinutesInput.value = longBreakMinutes
-  longBreakMinutesInput.addEventListener('input', function () {
-    longBreakMinutes = shortBreakMinutesInput.value;
-    timerWorker.postMessage(['SET', 'LONG_BREAK', toMillis(longBreakMinutes)])
-  })
-
-  // init
-  timerWorker.postMessage(['SET', 'POMODORO', toMillis(pomodoroMinutes)])
-  timerWorker.postMessage(['SET', 'SHORT_BREAK', toMillis(shortBreakMinutes)])
-  timerWorker.postMessage(['SET', 'LONG_BREAK', toMillis(longBreakMinutes)])
+  setupMinutesInput(timerWorker, 'pomodoro-time', 'POMODORO', startingPomodoroMinutes)
+  setupMinutesInput(timerWorker, 'short-break-time', 'SHORT_BREAK', startingShortBreakMinutes)
+  setupMinutesInput(timerWorker, 'long-break-time', 'LONG_BREAK', startingLongBreakMinutes)
 }
 
 const setTimerDisplay = (milliseconds) => {
