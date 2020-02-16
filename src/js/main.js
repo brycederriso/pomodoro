@@ -2,8 +2,9 @@
 // todo: change the title of the page when time is up.
 import { askNotificationPermission, sendNotification } from './notifications.js'
 
-
-let activeTimer = 'POMODORO';
+const POMODORO_TIMER_NAME = 'POMODORO'
+const SHORT_BREAK_TIMER_NAME = 'SHORT_BREAK'
+const LONG_BREAK_TIMER_NAME = 'LONG_BREAK'
 
 function toMillis (minutes) {
   return minutes * 60 * 1000
@@ -29,9 +30,9 @@ function setupSettingsControls (timerWorker) {
   const startingShortBreakMinutes = 5
   const startingLongBreakMinutes = 30
 
-  setupMinutesInput(timerWorker, 'pomodoro-time', 'POMODORO', startingPomodoroMinutes)
-  setupMinutesInput(timerWorker, 'short-break-time', 'SHORT_BREAK', startingShortBreakMinutes)
-  setupMinutesInput(timerWorker, 'long-break-time', 'LONG_BREAK', startingLongBreakMinutes)
+  setupMinutesInput(timerWorker, 'pomodoro-time', POMODORO_TIMER_NAME, startingPomodoroMinutes)
+  setupMinutesInput(timerWorker, 'short-break-time', SHORT_BREAK_TIMER_NAME, startingShortBreakMinutes)
+  setupMinutesInput(timerWorker, 'long-break-time', LONG_BREAK_TIMER_NAME, startingLongBreakMinutes)
 }
 
 const setTimerDisplay = (milliseconds) => {
@@ -52,32 +53,23 @@ const updateDisplay = (millisecondsRemaining) => {
 }
 
 const setupTimerControls = (timerWorker) => {
+  let activeTimer = POMODORO_TIMER_NAME;
+
   timerWorker.onmessage = (event) => {
     updateDisplay(event.data)
   }
 
-  const handlePomodoroClick = (e) => {
-    // todo: there's a great opportunity to make these click handlers more generic.
-    // todo: figure out what to do about SET not behaving as expected. Would like new SETs to send updates to the unstarted UI if that timer is active.
-    timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
-    activeTimer = 'POMODORO'
-    timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
+  function createTimerClickHandler (timer) {
+    return function (e) {
+      timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
+      activeTimer = timer
+      timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
+    }
   }
-  document.getElementById('pomodoro-button').addEventListener('click', handlePomodoroClick)
 
-  const handleShortBreakClick = (e) => {
-    timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
-    activeTimer = 'SHORT_BREAK'
-    timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
-  }
-  document.getElementById('short-break-button').addEventListener('click', handleShortBreakClick)
-
-  const handleLongBreakClick = (e) => {
-    timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
-    activeTimer = 'LONG_BREAK'
-    timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
-  }
-  document.getElementById('long-break-button').addEventListener('click', handleLongBreakClick)
+  document.getElementById('pomodoro-button').addEventListener('click', createTimerClickHandler(POMODORO_TIMER_NAME))
+  document.getElementById('short-break-button').addEventListener('click', createTimerClickHandler(SHORT_BREAK_TIMER_NAME))
+  document.getElementById('long-break-button').addEventListener('click', createTimerClickHandler(LONG_BREAK_TIMER_NAME))
 
   const handleStartClick = (event) => {
     timerWorker.postMessage(['START', activeTimer])
@@ -106,7 +98,8 @@ if (window.Worker) {
   setupTimerControls(timerWorker)
   setupSettingsControls(timerWorker)
 } else {
-  // todo: Web workers aren't really required, it just makes things less goofy.
+  // todo: It's not clear if webworkers are required -- maybe it'll help save power when the tab isn't active?
+  // todo: From above, go look at web worker lifecycle hooks and what those do
   // A friendly fallback strategy would be nice.
   document.getElementById('timer-layout').innerHTML = 'Web Workers are required.'
 }
