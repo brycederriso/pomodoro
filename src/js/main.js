@@ -81,7 +81,7 @@ const setupTimerControls = (timerWorker) => {
   document.getElementById('start-button').addEventListener('click', handleStartClick)
 
   const handlePauseClick = (event) => {
-    // clicking pause immediately after page refresh has ill-defined behavior.
+    // todo: clicking pause immediately after page refresh is buggy -- it resets the timer to 0:00
     timerWorker.postMessage(['PAUSE', activeTimer])
   }
   document.getElementById('pause-button').addEventListener('click', handlePauseClick)
