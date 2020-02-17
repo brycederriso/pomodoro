@@ -1,4 +1,3 @@
-// todo: change the title of the page when time is up.
 import { askNotificationPermission, sendNotification } from './notifications.js'
 
 const POMODORO_TIMER_NAME = 'POMODORO'
@@ -25,7 +24,7 @@ function setupMinutesInput (timerWorker, elementId, timerName, initialValue) {
 
 function setupSettingsControls (timerWorker) {
   const startingPomodoroMinutes = 25
-  const startingShortBreakMinutes = 5
+  const startingShortBreakMinutes = 10
   const startingLongBreakMinutes = 30
 
   setupMinutesInput(timerWorker, 'pomodoro-time', POMODORO_TIMER_NAME, startingPomodoroMinutes)
@@ -33,18 +32,19 @@ function setupSettingsControls (timerWorker) {
   setupMinutesInput(timerWorker, 'long-break-time', LONG_BREAK_TIMER_NAME, startingLongBreakMinutes)
 }
 
-const setTimerDisplay = (milliseconds) => {
+function minutesSecondsString (milliseconds) {
+  // this only works with milliseconds >= 0
   const minutes = String(Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60))).padStart(1, '0')
   const seconds = String(Math.floor((milliseconds % (1000 * 60)) / 1000)).padStart(2, '0')
 
-  timerDiv.innerHTML = `${minutes}:${seconds}`
+  return `${minutes}:${seconds}`
 }
 
 const updateDisplay = (millisecondsRemaining) => {
-  setTimerDisplay(millisecondsRemaining)
-  if (millisecondsRemaining < 0) {
-    // time's up
-    timerDiv.innerHTML = 'EXPIRED'
+  timerDiv.innerHTML = minutesSecondsString(millisecondsRemaining)
+
+  if (millisecondsRemaining < 0) { // time's up
+    timerDiv.innerHTML = `Time's up!`
     document.title = `Time's up!`
     sendNotification(`Time's up!`)
   }
@@ -58,6 +58,7 @@ const setupTimerControls = (timerWorker) => {
   function createTimerClickHandler (timer) {
     return function (e) {
       timerWorker.postMessage(['ACTIVATE', timer])
+      document.title = ORIGINAL_DOCUMENT_TITLE
     }
   }
 
