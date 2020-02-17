@@ -55,7 +55,6 @@ function handleActivateMessage (timerName) {
 }
 
 // todo: build some better understood messages?
-// not clear if this page is complicated enough to justify more than three constants...
 const START = "START",
   PAUSE = "PAUSE",
   RESET = "RESET",

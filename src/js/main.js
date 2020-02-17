@@ -4,12 +4,12 @@ const POMODORO_TIMER_NAME = 'POMODORO'
 const SHORT_BREAK_TIMER_NAME = 'SHORT_BREAK'
 const LONG_BREAK_TIMER_NAME = 'LONG_BREAK'
 
+const ORIGINAL_DOCUMENT_TITLE = document.title
+const timerDiv = document.getElementById('timer')
+
 function toMillis (minutes) {
   return minutes * 60 * 1000
 }
-
-const ORIGINAL_DOCUMENT_TITLE = document.title
-const timerDiv = document.getElementById('timer')
 
 function setupMinutesInput (timerWorker, elementId, timerName, initialValue) {
   const minutesInput = document.getElementById(elementId)
@@ -47,6 +47,8 @@ const updateDisplay = (millisecondsRemaining) => {
     timerDiv.innerHTML = `Time's up!`
     document.title = `Time's up!`
     sendNotification(`Time's up!`)
+
+    document.getElementById('complete-button').style.display = null;
   }
 }
 
@@ -86,6 +88,15 @@ const setupTimerControls = (timerWorker) => {
   }
   document.getElementById('reset-button').addEventListener('click', handleResetClick)
 
+}
+
+function setupCompleteButton () {
+  const completeButton = document.getElementById('complete-button')
+  completeButton.addEventListener('click', function (e) {
+    // record completion
+  })
+
+  // hide the button again.
 }
 
 if (window.Worker) {
