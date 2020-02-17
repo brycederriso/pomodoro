@@ -1,4 +1,3 @@
-// todo: send a notification when time is up
 // todo: change the title of the page when time is up.
 import { askNotificationPermission, sendNotification } from './notifications.js'
 
@@ -18,7 +17,6 @@ function setupMinutesInput (timerWorker, elementId, timerName, initialValue) {
   minutesInput.value = initialValue
   minutesInput.addEventListener('input', function () {
     timerWorker.postMessage(['SET', timerName, toMillis(minutesInput.value)])
-    timerWorker.postMessage(['RESET', timerName])
   })
 
   // initialize inputs with starting value
@@ -53,17 +51,13 @@ const updateDisplay = (millisecondsRemaining) => {
 }
 
 const setupTimerControls = (timerWorker) => {
-  let activeTimer = POMODORO_TIMER_NAME;
-
   timerWorker.onmessage = (event) => {
     updateDisplay(event.data)
   }
 
   function createTimerClickHandler (timer) {
     return function (e) {
-      timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
-      activeTimer = timer
-      timerWorker.postMessage(['RESET', activeTimer]) // ugly hack
+      timerWorker.postMessage(['ACTIVATE', timer])
     }
   }
 
@@ -72,7 +66,7 @@ const setupTimerControls = (timerWorker) => {
   document.getElementById('long-break-button').addEventListener('click', createTimerClickHandler(LONG_BREAK_TIMER_NAME))
 
   const handleStartClick = (event) => {
-    timerWorker.postMessage(['START', activeTimer])
+    timerWorker.postMessage(['START'])
 
     if (Notification.permission === 'default') {
       askNotificationPermission()
@@ -81,22 +75,25 @@ const setupTimerControls = (timerWorker) => {
   document.getElementById('start-button').addEventListener('click', handleStartClick)
 
   const handlePauseClick = (event) => {
-    // todo: clicking pause immediately after page refresh is buggy -- it resets the timer to 0:00
-    timerWorker.postMessage(['PAUSE', activeTimer])
+    timerWorker.postMessage(['PAUSE'])
   }
   document.getElementById('pause-button').addEventListener('click', handlePauseClick)
 
   const handleResetClick = (event) => {
-    timerWorker.postMessage(['RESET', activeTimer])
+    timerWorker.postMessage(['RESET'])
     document.title = ORIGINAL_DOCUMENT_TITLE
   }
   document.getElementById('reset-button').addEventListener('click', handleResetClick)
+
 }
 
 if (window.Worker) {
   const timerWorker = new Worker('js/timerWorker.js')
   setupTimerControls(timerWorker)
   setupSettingsControls(timerWorker)
+
+  // Activate the Pomodoro Timer by default
+  timerWorker.postMessage(['ACTIVATE', POMODORO_TIMER_NAME])
 } else {
   // todo: It's not clear if webworkers are required -- maybe it'll help save power when the tab isn't active?
   // todo: From above, go look at web worker lifecycle hooks and what those do
