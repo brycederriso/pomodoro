@@ -54,6 +54,25 @@ function setupTimerControls (timerWorker) {
       document.getElementById('complete-button').style.display = null
     }
   }
+  function displayCompleteButton (timeValue) {
+    const completeButton = document.getElementById('complete-button')
+    if (timeValue <= 0) {
+      completeButton.style.display = null
+    }
+
+    function handleDoneClick (e) {
+      if (timeValue <= 0) {
+        alert('You finished the thing!')
+        completeButton.style.display = 'none'
+        e.target.removeEventListener('click', handleDoneClick)
+      }
+    }
+    completeButton.addEventListener('click', handleDoneClick)
+  }
+  timerWorker.onmessage = (event) => {
+    updateDisplay(event.data)
+    displayCompleteButton(event.data)
+  }
 
   function setupTimerNameHandlers () {
     function createTimerClickHandler (timer) {
@@ -93,9 +112,6 @@ function setupTimerControls (timerWorker) {
     document.getElementById('reset-button').addEventListener('click', handleResetClick)
   }
 
-  timerWorker.onmessage = (event) => {
-    updateDisplay(event.data)
-  }
 
   setupTimerNameHandlers()
   setupStartHandler()
@@ -103,14 +119,6 @@ function setupTimerControls (timerWorker) {
   setupResetHandler()
 }
 
-function setupCompleteButton () {
-  const completeButton = document.getElementById('complete-button')
-  completeButton.addEventListener('click', function (e) {
-    // record completion
-  })
-
-  // hide the button again.
-}
 
 if (window.Worker) {
   const timerWorker = new Worker('js/timerWorker.js')
