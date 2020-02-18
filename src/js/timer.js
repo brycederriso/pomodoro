@@ -39,7 +39,14 @@ const Timer = function ({
         countdownDate = Date.now() + baseTime
       }
 
-      timerInterval = setInterval(() => onIncrement(getTime()), 300)
+      let previous
+      timerInterval = setInterval(() => {
+        const roundedDownToSecond = Math.floor(getTime() / 1000) * 1000
+        if (roundedDownToSecond !== previous) {
+          previous = roundedDownToSecond
+          onIncrement(getTime())
+        }
+      }, 300)
     }
   }
   const getTime = () => {
