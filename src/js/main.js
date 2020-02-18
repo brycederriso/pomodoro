@@ -50,28 +50,22 @@ function setupTimerControls (timerWorker) {
       timerDiv.innerHTML = `Time's up!`
       document.title = `Time's up!`
       sendNotification(`Time's up!`)
-
-      document.getElementById('complete-button').style.display = null
     }
   }
-  function displayCompleteButton (timeValue) {
-    const completeButton = document.getElementById('complete-button')
-    if (timeValue <= 0) {
-      completeButton.style.display = null
-    }
 
-    function handleDoneClick (e) {
-      if (timeValue <= 0) {
-        alert('You finished the thing!')
-        completeButton.style.display = 'none'
-        e.target.removeEventListener('click', handleDoneClick)
-      }
+  function recordCompletion (millisecondsRemaining) {
+    if (millisecondsRemaining <= 0) {
+      // attach an OL to the web page
+      const completionsList = document.getElementById('completions-list')
+      const newCompletion = document.createElement('li')
+      newCompletion.innerText = `done.`
+      completionsList.insertBefore(newCompletion, completionsList.firstChild)
     }
-    completeButton.addEventListener('click', handleDoneClick)
   }
+
   timerWorker.onmessage = (event) => {
     updateDisplay(event.data)
-    displayCompleteButton(event.data)
+    recordCompletion(event.data)
   }
 
   function setupTimerNameHandlers () {
@@ -111,7 +105,6 @@ function setupTimerControls (timerWorker) {
     }
     document.getElementById('reset-button').addEventListener('click', handleResetClick)
   }
-
 
   setupTimerNameHandlers()
   setupStartHandler()
