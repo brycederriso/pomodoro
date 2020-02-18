@@ -14,27 +14,23 @@ Instead of moving the display code into the timer object, we could just fix the 
 
 It's likely that things will be left with just a per second update but who knows!
  */
-const Timer = function (t) {
-  if (t <= 0 || !t) {
+const Timer = function ({
+  onIncrement,
+  baseTime
+}) {
+  if (baseTime <= 0 || !baseTime) {
     throw new Error("No time provided to Timer")
   }
 
   let countdownDate
   let queuedTime = 0
   let timerInterval
-  let baseTime = t
 
   const removeInterval = () => {
     clearInterval(timerInterval)
     timerInterval = null
   }
-  const setBaseTime = (time) => {
-    baseTime = time
-  }
-  const getBaseTime = () => {
-    return baseTime;
-  }
-  const startTimer = (cb) => {
+  const start = () => {
     if (!timerInterval) { // debounce multiple starts.
       if (queuedTime) {
         countdownDate = Date.now() + queuedTime
@@ -42,11 +38,8 @@ const Timer = function (t) {
       } else {
         countdownDate = Date.now() + baseTime
       }
-      // todo: This is incredibly gross.
-      //  I have to do it because sendUpdate (the cb) was relying on lexically scoped timer to get and pause.
-      //  That doesn't work when we deal with multiple timer objects.
-      //  I do feel like at some point I'd like to provide custom "stop" conditions for a timer
-      timerInterval = setInterval(cb.bind(undefined, getTime, pauseTimer), 300)
+
+      timerInterval = setInterval(() => onIncrement(getTime()), 300)
     }
   }
   const getTime = () => {
@@ -54,25 +47,21 @@ const Timer = function (t) {
       return queuedTime
     } else if (countdownDate) {
       return countdownDate - Date.now()
-    } else {
-      return 0
     }
   }
-  const pauseTimer = () => {
+  const pause = () => {
     queuedTime = getTime()
     removeInterval()
   }
-  const resetTimer = () => {
+  const reset = () => {
     queuedTime = baseTime
     removeInterval()
   }
 
   return {
-    startTimer,
+    start,
     getTime,
-    pauseTimer,
-    resetTimer,
-    setBaseTime,
-    getBaseTime
+    pause,
+    reset,
   }
 }

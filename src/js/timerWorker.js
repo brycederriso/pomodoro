@@ -4,41 +4,34 @@ importScripts('./timer.js')
 const timers = {}
 let activeTimer = null
 
-const sendUpdate = (getTime, pauseTimer) => {
-  let millisecondsRemaining = getTime()
-  if (millisecondsRemaining < 0) {
-    // removing this interval means we stop tracking time at all.
-    // this is the place where we'd want to *keep going* so we could display how much time has elapsed since the end of
-    // the pomodoro. Something like `-10:30` if you went to the bathroom or whatever before clicking stop. Might be nice.
-    pauseTimer()
-  }
+const sendUpdate = (millisecondsRemaining) => {
   postMessage(millisecondsRemaining)
 }
 
 const handleStartMessage = () => {
-  timers[activeTimer].startTimer(sendUpdate)
+  timers[activeTimer].start()
 }
 const handlePauseMessage = () => {
   const timer = timers[activeTimer]
 
-  timer.pauseTimer()
+  timer.pause()
   postMessage(timer.getTime())
 }
 const handleResetMessage = () => {
   // todo: should reset kill your current timer session?
   // todo: Reset only the active timer.
+  // todo: Reset on while a timer is active does bad things.
   if (timers[activeTimer]) {
     const timer = timers[activeTimer]
-    timer.resetTimer()
+    timer.reset()
     postMessage(timer.getTime())
   }
 }
 const handleSetMessage = (timerName, time) => {
-  if (timers[timerName]) {
-    timers[timerName].setBaseTime(time)
-  } else {
-    timers[timerName] = Timer(time)
-  }
+  timers[timerName] = Timer({
+    onIncrement: sendUpdate,
+    baseTime: time
+  })
 }
 
 function handleActivateMessage (timerName) {
