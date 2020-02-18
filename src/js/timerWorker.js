@@ -30,6 +30,7 @@ const handleResetMessage = () => {
 const handleSetMessage = (timerName, time) => {
   timers[timerName] = Timer({
     onIncrement: sendUpdate,
+    continueOn: false,
     baseTime: time
   })
 }
@@ -42,7 +43,11 @@ function handleActivateMessage (timerName) {
   } else {
     handleResetMessage()
     activeTimer = timerName
-    timers[timerName] = Timer(10 * 60 * 1000)
+    timers[timerName] = Timer({
+      onIncrement: sendUpdate,
+      continueOn: false,
+      baseTime: 10 * 60 * 1000
+    })
     handleResetMessage()
   }
 }

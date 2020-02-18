@@ -16,6 +16,7 @@ It's likely that things will be left with just a per second update but who knows
  */
 const Timer = function ({
   onIncrement,
+  continueOn,
   baseTime
 }) {
   if (baseTime <= 0 || !baseTime) {
@@ -42,9 +43,11 @@ const Timer = function ({
       let previous
       timerInterval = setInterval(() => {
         const roundedDownToSecond = Math.floor(getTime() / 1000) * 1000
-        if (roundedDownToSecond !== previous) {
+        if (roundedDownToSecond !== previous && roundedDownToSecond >= 0 && continueOn) {
           previous = roundedDownToSecond
           onIncrement(getTime())
+        } else {
+          // todo: figure out how to fix continueOn
         }
       }, 300)
     }
