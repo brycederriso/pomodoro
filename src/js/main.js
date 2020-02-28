@@ -46,7 +46,7 @@ function setupTimerControls (timerWorker) {
 
     timerDiv.innerHTML = minutesSecondsString(millisecondsRemaining)
 
-    if (millisecondsRemaining < 0) { // time's up
+    if (millisecondsRemaining <= 0) { // time's up
       timerDiv.innerHTML = `Time's up!`
       document.title = `Time's up!`
       sendNotification(`Time's up!`)
