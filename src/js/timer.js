@@ -1,4 +1,4 @@
-// todo: there's an opportunity to debounce this so that it doesn't send no-op updates to the display.
+// todo: there's an opportunity to debounce this so that it doesn't send empty updates to the display.
 /*
 Right now, this will flash something like 0:59 ~3 times in a second, even though there's no change!
 To handle this, we'll need some way to compare the *last* output to the current output.
@@ -14,10 +14,12 @@ Instead of moving the display code into the timer object, we could just fix the 
 
 It's likely that things will be left with just a per second update but who knows!
  */
+const roundDownToSecond = (time) => Math.floor(time / 1000) * 1000
+
 const Timer = function ({
-  onIncrement,
-  continueOn,
-  baseTime
+  tick,
+  baseTime,
+  ring
 }) {
   if (baseTime <= 0 || !baseTime) {
     throw new Error("No time provided to Timer")
@@ -32,7 +34,7 @@ const Timer = function ({
     timerInterval = null
   }
   const start = () => {
-    if (!timerInterval) { // debounce multiple starts.
+    if (!timerInterval) { // don't do anything if the timer is already active.
       if (queuedTime) {
         countdownDate = Date.now() + queuedTime
         queuedTime = 0
@@ -42,14 +44,13 @@ const Timer = function ({
 
       let previous
       timerInterval = setInterval(() => {
-        const roundedDownToSecond = Math.floor(getTime() / 1000) * 1000
-        const timeRemaining = roundedDownToSecond >= 0
-        if (roundedDownToSecond !== previous) {
-          if (timeRemaining || continueOn) {
-            previous = roundedDownToSecond
-            onIncrement(roundedDownToSecond)
+        const rounded = roundDownToSecond(getTime())
+        if (rounded !== previous) {
+          if (rounded === 0) {
+            ring()
           } else {
-            pause()
+            previous = rounded
+            tick(rounded)
           }
         }
       }, 300)
@@ -65,15 +66,16 @@ const Timer = function ({
   const pause = () => {
     queuedTime = getTime()
     removeInterval()
+    return queuedTime
   }
   const reset = () => {
     queuedTime = baseTime
     removeInterval()
+    return queuedTime
   }
 
   return {
     start,
-    getTime,
     pause,
     reset,
   }

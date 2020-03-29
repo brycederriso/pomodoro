@@ -5,7 +5,10 @@ const timers = {}
 let activeTimer = null
 
 const sendUpdate = (millisecondsRemaining) => {
-  postMessage(millisecondsRemaining)
+  postMessage({
+    type: 'TIME',
+    value: millisecondsRemaining
+  })
 }
 
 const handleStartMessage = () => {
@@ -14,8 +17,10 @@ const handleStartMessage = () => {
 const handlePauseMessage = () => {
   const timer = timers[activeTimer]
 
-  timer.pause()
-  postMessage(timer.getTime())
+  postMessage({
+    type: 'TICK',
+    value: timer.pause()
+  })
 }
 const handleResetMessage = () => {
   // todo: should reset kill your current timer session?
@@ -23,15 +28,17 @@ const handleResetMessage = () => {
   // todo: Reset on while a timer is active does bad things.
   if (timers[activeTimer]) {
     const timer = timers[activeTimer]
-    timer.reset()
-    postMessage(timer.getTime())
+    postMessage({
+      type: 'TICK',
+      value: timer.reset()
+    })
   }
 }
 const handleSetMessage = (timerName, time) => {
   timers[timerName] = Timer({
-    onIncrement: sendUpdate,
-    continueOn: false,
-    baseTime: time
+    tick: sendUpdate,
+    baseTime: time,
+    ring: (value) => postMessage({type: 'TIMES_UP', value: timerName})
   })
 }
 
@@ -44,9 +51,9 @@ function handleActivateMessage (timerName) {
     handleResetMessage()
     activeTimer = timerName
     timers[timerName] = Timer({
-      onIncrement: sendUpdate,
-      continueOn: false,
-      baseTime: 10 * 60 * 1000
+      tick: sendUpdate,
+      baseTime: 10 * 60 * 1000,
+      ring: (value) => postMessage({type: 'TIMES_UP', value: timerName})
     })
     handleResetMessage()
   }

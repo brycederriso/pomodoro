@@ -14,15 +14,26 @@ function setupSettingsControls (timerWorker) {
     return minutes * 60 * 1000
   }
 
-  function setupMinutesInput (timerWorker, elementId, timerName, initialValue) {
+  function setupMinutesInput (timerWorker, elementId, timerName, setUpValue) {
     const minutesInput = document.getElementById(elementId)
-    minutesInput.value = initialValue
+    minutesInput.value =  setUpValue
+
+    let inputInitialValue = setUpValue
+    let input = setUpValue
+    minutesInput.addEventListener('focusin', function () {
+      inputInitialValue = minutesInput.value
+    })
     minutesInput.addEventListener('input', function () {
-      timerWorker.postMessage(['SET', timerName, toMillis(minutesInput.value)])
+      input = minutesInput.value
+    })
+    minutesInput.addEventListener('focusout', function () {
+      if (input && input > 0 && input !== inputInitialValue) {
+        timerWorker.postMessage(['SET', timerName, toMillis(input)])
+      }
     })
 
     // initialize inputs with starting value
-    timerWorker.postMessage(['SET', timerName, toMillis(initialValue)])
+    timerWorker.postMessage(['SET', timerName, toMillis(setUpValue)])
   }
 
   setupMinutesInput(timerWorker, 'pomodoro-time', POMODORO_TIMER_NAME, startingPomodoroMinutes)
@@ -33,7 +44,7 @@ function setupSettingsControls (timerWorker) {
 function setupTimerControls (timerWorker) {
   const ORIGINAL_DOCUMENT_TITLE = document.title
 
-  function updateDisplay (millisecondsRemaining) {
+  function updateDisplay ({value}) {
     const timerDiv = document.getElementById('timer')
 
     function minutesSecondsString (milliseconds) {
@@ -44,28 +55,32 @@ function setupTimerControls (timerWorker) {
       return `${minutes}:${seconds}`
     }
 
-    timerDiv.innerHTML = minutesSecondsString(millisecondsRemaining)
+    timerDiv.innerHTML = minutesSecondsString(value)
 
-    if (millisecondsRemaining <= 0) { // time's up
+    if (value <= 0) { // time's up
       timerDiv.innerHTML = `Time's up!`
       document.title = `Time's up!`
       sendNotification(`Time's up!`)
     }
   }
 
-  function recordCompletion (millisecondsRemaining) {
-    if (millisecondsRemaining <= 0) {
-      // attach an OL to the web page
-      const completionsList = document.getElementById('completions-list')
-      const newCompletion = document.createElement('li')
-      newCompletion.innerText = `done.`
-      completionsList.insertBefore(newCompletion, completionsList.firstChild)
-    }
+  function recordCompletion ({value}) {
+    const completionsList = document.getElementById('completions-list')
+    const newCompletion = document.createElement('li')
+    newCompletion.innerText = `${value} done.`
+    completionsList.insertBefore(newCompletion, completionsList.firstChild)
   }
 
   timerWorker.onmessage = (event) => {
-    updateDisplay(event.data)
-    recordCompletion(event.data)
+    switch (event.data.type) {
+      case 'TIME':
+          updateDisplay(event.data)
+        break;
+      case 'TIMES_UP':
+          recordCompletion(event.data)
+        break;
+      default:
+    }
   }
 
   function setupTimerNameHandlers () {
@@ -114,7 +129,7 @@ function setupTimerControls (timerWorker) {
 
 
 if (window.Worker) {
-  const timerWorker = new Worker('js/timerWorker.js')
+  const timerWorker = new Worker('js/timingBooth.js')
   setupTimerControls(timerWorker)
   setupSettingsControls(timerWorker)
 
